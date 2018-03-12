@@ -2,10 +2,10 @@ const TARGET = process.env.npm_lifecycle_event;
 
 if (TARGET === 'dev') {
     console.log('run dev!')
-    module.exports = require('./config/webpack.dev.conf.js')
+    module.exports = require('./webpack.dev.conf.js')
 }
-if (TARGET === 'prod') {
+if (TARGET === 'build') {
     console.log('run prod!')
-    module.exports = require('./config/webpack.prod.conf.js')
+    module.exports = require('./webpack.prod.conf.js')
 }
 

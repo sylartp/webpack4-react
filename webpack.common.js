@@ -1,20 +1,20 @@
 const path = require('path')
 const webpack = require('webpack')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
+const vendor = require('./vendor.js')
 const CleanWebpackPlugin = require('clean-webpack-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 
 const PATHS = {
-    src: path.join(__dirname, '../src'),
-    dist: path.join(__dirname, '../dist')
+    src: path.join(__dirname, './src'),
+    dist: path.join(__dirname, './dist')
 };
 
 module.exports = {
     context: __dirname,
-    devtool: 'inline-source-map',
     entry:{
         app: [PATHS.src],
-        vendor: ['babel-polyfill']
+        vendor
     },
     output:{
         filename: "bundle.js",
@@ -57,15 +57,11 @@ module.exports = {
     optimization: {
         splitChunks: {
             cacheGroups: {
-                commons: {
-                  chunks: 'initial',
-                  minChunks: 2, maxInitialRequests: 5,
-                  minSize: 0
-                },
                 vendor: {
                   test: /[\\/]node_modules[\\/]/,
                   chunks: 'initial',
                   name: 'vendor',
+                  filename: 'bundle.[chunkhash].js',
                   priority: 10,
                   enforce: true
                 }
@@ -73,11 +69,10 @@ module.exports = {
         },      
     },
     plugins:[
-        new webpack.optimize.UglifyJsPlugin(),
+        new CleanWebpackPlugin(PATHS.dist, {verbose: true}),
         new HtmlWebpackPlugin(
             {
-                title: 'social club',
-                template: '../src/index.html'
+                template: './src/index.html'
             }),
         new ExtractTextPlugin('theme.css'),
     ]
